@@ -14,7 +14,9 @@ SOURCES = {
         "description": "Wetland areas from Danish EPA",
         "filename": "kulstof2022",
         "frequency": "static",
-        "enabled": True
+        "enabled": True,
+        "url": "https://wfs2-miljoegis.mim.dk/natur/wfs",
+        "layer": "natur:kulstof2022"
     },
         "cadastral": {
         "name": "Danish Cadastral Properties",

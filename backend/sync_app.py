@@ -1,16 +1,18 @@
 import asyncio
 import logging
 from scripts.sync_cadastral import main as sync_cadastral
+from scripts.sync_wetlands import main as sync_wetlands
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 async def run_sync():
-    """Run the cadastral sync process"""
-    logger.info("Starting cadastral sync...")
+    """Run all sync processes"""
+    logger.info("Starting sync processes...")
     try:
         await sync_cadastral()
+        await sync_wetlands()
         logger.info("Sync completed successfully")
         return True
     except Exception as e:
