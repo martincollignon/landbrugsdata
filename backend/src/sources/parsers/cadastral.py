@@ -159,6 +159,25 @@ class Cadastral(Source):
                 parser.close()
                 del parser
 
+    async def _fetch_chunk_with_retry(self, session, start_index, max_retries=3, initial_delay=1):
+        """Fetch chunk with exponential backoff retry"""
+        delay = initial_delay
+        last_exception = None
+        
+        for attempt in range(max_retries):
+            try:
+                return await self._fetch_chunk(session, start_index)
+            except Exception as e:
+                last_exception = e
+                if attempt < max_retries - 1:  # Don't sleep on the last attempt
+                    logger.warning(f"Attempt {attempt + 1} failed for chunk {start_index}: {str(e)}. Retrying in {delay} seconds...")
+                    await asyncio.sleep(delay)
+                    delay *= 2  # Exponential backoff
+                else:
+                    logger.error(f"All {max_retries} attempts failed for chunk {start_index}")
+        
+        raise last_exception
+
     async def sync(self, client):
         """Sync cadastral data to PostgreSQL"""
         logger.info("Starting cadastral sync...")
