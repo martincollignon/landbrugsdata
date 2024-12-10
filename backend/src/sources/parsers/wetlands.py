@@ -205,9 +205,6 @@ class Wetlands(Source):
             
             # If sync complete, create final files
             if hasattr(self, 'is_sync_complete') and self.is_sync_complete:
-                logger.info("Sync complete - analyzing input geometries...")
-                self.log_geometry_statistics(combined_gdf)
-                
                 logger.info(f"Starting merge of {len(combined_gdf):,} features...")
                 start_time = time.time()
                 
@@ -255,8 +252,8 @@ class Wetlands(Source):
                     
                     merged_polygons.append(merged_poly)
                     
-                    if len(merged_polygons) % 1000 == 0:
-                        logger.info(f"Processed {len(merged_polygons)} groups")
+                    if len(merged_polygons) % 10000 == 0:
+                        logger.info(f"Processed {len(merged_polygons):,} groups")
                 
                 # Create new GeoDataFrame with merged polygons
                 dissolved_gdf = gpd.GeoDataFrame(
